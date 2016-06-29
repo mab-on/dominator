@@ -1,0 +1,12 @@
+{
+	"name": "dominator",
+	"authors": [
+		"Martin Brzenska"
+	],
+	"description": "A HTML scraper Command-line Application",
+	"copyright": "Copyright © 2016, Martin Brzenska",
+	"license": "MIT",
+	"dependencies": {
+		"libdominator":"~>0.9"
+	}
+}
