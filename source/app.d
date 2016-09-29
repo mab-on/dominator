@@ -14,27 +14,28 @@ import std.array : join;
 
 import libdominator;
 
-void main(string[] args)
+int main(string[] args)
 {
 
     string[] optTags;
     string optAttribs;
     string[] optOutItems;
     string optNodeSeparator, optNodeTerminator;
+    string inputFile;
 
     auto optResult = getopt(
         args,
-        "fiter|f", "A Dominator specific Filter Expression", &optTags, 
-        "filter-attribute|a", "Filters the Nodes, that matches the given Arrtributes", &optAttribs,
+        "fiter|f", "A Dominator specific Filter Expression", &optTags,
         "output-item|o", "Defines the Output", &optOutItems,
         "output-item-terminator|t", "Character, that terminates one item Group on Output", &optNodeTerminator,
-        "output-item-serparator|s", "Character, that separates the items on Output", &optNodeSeparator
+        "output-item-serparator|s", "Character, that separates the items on Output", &optNodeSeparator,
+        "input-file|i", "Read the Input from a File instead of stdin" , &inputFile
     );
     
     if(optResult.helpWanted) 
     {
         defaultGetoptPrinter("Some information about the program.",optResult.options);
-        return;
+        return 0;
     }
     
     if(!optOutItems.length)
@@ -51,20 +52,26 @@ void main(string[] args)
     }
 
     string input;
-    readf(" %s", &input);
+    if(!inputFile) {
+        readf(" %s", &input);
+    }
+    else {
+        try {
+            input = readText(inputFile);
+        }
+        catch (FileException e) {
+            writeln("The Input File could not be read");
+            return 1;
+        }
+    }
+    
 
-    auto wantedAttributes = AttributeFilter(optAttribs);
     auto domFilterHandler = DomFilter(optTags);
-
     auto dom = new Dominator(input);
 
     //Filter and Write out
-    foreach(Node node ; dom.getNodes()
-    .filterDom(domFilterHandler)
-    .filterAttribute(wantedAttributes.attribs)) {
-        write(
-            join(dom.nodeOutputItems(node,optOutItems),optNodeSeparator)
-            ~optNodeTerminator
-        );
+    foreach(Node node ; dom.getNodes().filterDom(domFilterHandler)) {
+        write(join(dom.nodeOutputItems(node,optOutItems),optNodeSeparator)~optNodeTerminator);
     }
+    return 0;
 }
