@@ -9,11 +9,12 @@ usage & examples
 ###Parameters
 | Parameter | short | Description |
 |-----------|-------|-------------|
-| --fiter | -f | A Dominator specific Filter Expression |
+| --filter | -f | A Dominator specific Filter Expression |
 | --output-item | -o | Defines the Output |
 | --output-item-terminator | -t | Character, that terminates one item Group on Output |
 | --output-item-serparator | -s | Character, that separates the items on Output |
 | --input-file | -i | Read the Input from a File instead of stdin |
+| --with-html-comments |  | include matches in commented html into the output |
 
 This Example shows a query for a-tags, that are children of a li-tag and has a class Attibute with the value "link".
 We want to the output to be "Tag"\t"Element Attributes csv"\t"value of the element Attribute href"\n for each hit 
