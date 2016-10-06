@@ -22,14 +22,16 @@ int main(string[] args)
     string[] optOutItems;
     string optNodeSeparator, optNodeTerminator;
     string inputFile;
+    bool withComments = false;
 
     auto optResult = getopt(
         args,
-        "fiter|f", "A Dominator specific Filter Expression", &optTags,
+        "filter|f", "A Dominator specific Filter Expression", &optTags,
         "output-item|o", "Defines the Output", &optOutItems,
         "output-item-terminator|t", "Character, that terminates one item Group on Output", &optNodeTerminator,
         "output-item-serparator|s", "Character, that separates the items on Output", &optNodeSeparator,
-        "input-file|i", "Read the Input from a File instead of stdin" , &inputFile
+        "input-file|i", "Read the Input from a File instead of stdin" , &inputFile,
+        "with-html-comments","", &withComments
     );
     
     if(optResult.helpWanted) 
@@ -70,7 +72,11 @@ int main(string[] args)
     auto dom = new Dominator(input);
 
     //Filter and Write out
-    foreach(Node node ; dom.getNodes().filterDom(domFilterHandler)) {
+    Node[] nodes = dom.getNodes().filterDom(domFilterHandler);
+    if( ! withComments) {
+        nodes = nodes.filterComments();
+    }
+    foreach(Node node ; nodes) {
         write(join(dom.nodeOutputItems(node,optOutItems),optNodeSeparator)~optNodeTerminator);
     }
     return 0;
