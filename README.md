@@ -7,6 +7,7 @@ usage & examples
 ----------------
 
 ###Parameters
+
 | Parameter | short | Description |
 |-----------|-------|-------------|
 | --filter | -f | A Dominator specific Filter Expression |
