@@ -34,22 +34,22 @@ a	href,id,class	https://github.com
 #Filter Syntax
 Expression = TAG[PICK]{ATTR_NAME:ATTR_VALUE}
 Multiple expression can be concated with "." to find Stuff inside of specific parent nodes.
-| item | description | example |
-|------|-------------|---------| 
-| TAG | The Name of the node | a , p , div ... |
-| [PICK] | Picks only the n th match. n begins on 1. PICK can be a list or range | [1] picks the first match , [1,3] picks the first and third , [1..3] picks the first three matches ) |
-| {ATTR_NAME:ATTR_VALUE} | is the attribute selector | {id:myID} , {class:someClass} , {href:(regex)^http://}  |
 
+| Item | Description | Example |
+|------|-------------|---------|
+| TAG | The Name of the node | a , p , div , *  |
+| [PICK] | (can be ommited) Picks only the n th match. n begins on 1. PICK can be a list or range | [1] picks the first match , [1,3] picks the first and third , [1..3] picks the first three matches  |
+| {ATTR_NAME:ATTR_VALUE} | The attribute selector | {id:myID} , {class:someClass} , {href:(regex)^http://}  |
 
 Build & install
--------
+---------------
 
-##build
+###build
 `
 dub build dominator
 `
 copy the binary in one of your PATH directories
 
-##use a already build binary
+###use a already build binary
 Check out the bin/ directory. 
 Occasionally i put Windows and Mac binaries in this directory - please be aware, that these binaries usually are not up to date. 
