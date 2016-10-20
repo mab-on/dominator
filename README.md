@@ -35,7 +35,7 @@ a	href,id,class	https://github.com
 #Filter Syntax
 Expression = TAG[PICK]{ATTR_NAME:ATTR_VALUE}
 
-Multiple expression can be concatenated  with "." to find Stuff inside of specific parent nodes.
+Multiple expression can be concatenated  with "." to find stuff inside of specific parent nodes.
 
 | Item | Description | Example |
 |------|-------------|---------|
