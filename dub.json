@@ -3,7 +3,7 @@
 	"authors": [
 		"Martin Brzenska"
 	],
-	"description": "A HTML scraper Command-line Application",
+	"description": "A HTML scraper command-line application",
 	"copyright": "Copyright © 2016, Martin Brzenska",
 	"license": "MIT",
 	"dependencies": {
