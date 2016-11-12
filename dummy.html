@@ -39,8 +39,8 @@
 	-->
 
 	<!--m--><article>active article</article>
-	<article>active article</article><!--m-->
-	<!--m--><article>active article</article><!--m-->
+	< article>active article< /article > <!--m-->
+	<!--m--><article >active article< /article><!--m-->
 
 	<?php echo "test"; ?>
 
@@ -68,5 +68,34 @@
 </body>
 
 <onelinenested class="level1"><onelinenested class="level2"></onelinenested></onelinenested>
+
+<!-- found trouble in real live -->
+<A HREF="https://www.google.com/support/contact/user?hl=en">report</A>
+<a href=//www.google.com/><span id=logo aria-label=Google></span></a>
+
+<div nasty="bla > fasel">Aha!</div>
+
+<div
+class="multiline-node"
+>
+Some Inner Text
+</div>
+
+<div
+data-evil-one="a>b"
+data-evil-two='a>b'
+data-evil-three='a <> b'
+data-evil-four='{
+	crazy: function() {
+		console.log("What\'s this!?");
+		var a = 2;
+		var b = a * 2;
+		return b > a;
+		};
+}'
+> <!-- end of the divs node-head -->
+	This node has a some evil attribute-values
+</div>
+
 
 </html>
