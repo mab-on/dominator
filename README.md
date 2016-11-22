@@ -15,7 +15,8 @@ usage & examples
 | --output-item-terminator | -t | Character, which terminates one item group on output |
 | --output-item-serparator | -s | Character, which separates the items on output |
 | --input-file | -i | Read the input from a file instead of stdin |
-| --with-html-comments | -c | include matches in commented html into the output |
+| --with-html-comments | -c | Include matches in commented html into the output |
+| --squash-whitespaces | -w | Removes multiple whitespaces. Only applies to the output-items 'element-strip' , 'element-inner' , 'element' |
 
 #### --output-item: Valid arguments
 
@@ -25,6 +26,7 @@ usage & examples
 | element-opener | The opening node-tag |
 | element | The nodes full content |
 | element-inner | The nodes full inner content |
+| element-strip | The nodes full inner content without tags |
 | element-start | The position of the opening tag in the element |
 | element-end | The position of the termination tag in the element |
 | attrib-keys | A comma-separated list of the nodes attributes |

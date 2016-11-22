@@ -16,13 +16,19 @@ import libdominator;
 
 int main(string[] args)
 {
+    string
+        optNodeSeparator,
+        optNodeTerminator,
+        inputFile,
+        optAttribs;
 
-    string[] optTags;
-    string optAttribs;
-    string[] optOutItems;
-    string optNodeSeparator, optNodeTerminator;
-    string inputFile;
-    bool withComments = false;
+    string[]
+        optTags,
+        optOutItems;
+
+    bool
+        withComments,
+        squashWhitespaces;
 
     auto optResult = getopt(
         args,
@@ -45,6 +51,7 @@ int main(string[] args)
         ~"\t" ~ "element-opener" ~"\t" ~ "The opening node-tag." ~ "\n"
         ~"\t" ~ "element" ~"\t\t" ~ "The nodes full content." ~ "\n"
         ~"\t" ~ "element-inner" ~"\t" ~ "The nodes full inner content." ~ "\n"
+        ~"\t" ~ "element-strip" ~"\t" ~ "The nodes full inner content without tags." ~ "\n"
         ~"\t" ~ "element-start" ~"\t" ~ "The position of the opening tag in the element." ~ "\n"
         ~"\t" ~ "element-end" ~"\t" ~ "The position of the termination tag in the element." ~ "\n"
         ~"\t" ~ "attrib-keys" ~"\t" ~ "A comma-separated list of the nodes attributes." ~ "\n"
@@ -65,7 +72,13 @@ int main(string[] args)
 
         "with-html-comments|c",
         "",
-        &withComments
+        &withComments,
+
+        "squash-whitespaces|w",
+        "\nRemoves multiple whitespaces." ~ "\n"
+        ~"Only applies to the output-items 'element-strip' , 'element-inner' , 'element'" ~ "\n",
+        &squashWhitespaces
+
     );
 
     if(optResult.helpWanted)
@@ -75,6 +88,7 @@ int main(string[] args)
             ~"Author: Martin Brzenska (martin@mab-on.net)\n"
             ~"Copyright © 2016, Martin Brzenska\n"
 	        ~"License: MIT\n"
+            ~"Donate: Paypal: martin.brzenska@gmail.com\n"
             ~"\nParameters:\n"
             ,
             optResult.options
@@ -119,7 +133,28 @@ int main(string[] args)
         nodes = nodes.filterComments();
     }
     foreach(Node node ; nodes) {
-        write(join(dom.nodeOutputItems(node,optOutItems),optNodeSeparator)~optNodeTerminator);
+        if(squashWhitespaces) {
+            import std.algorithm.comparison : among;
+            import std.regex : replaceAll , ctRegex;
+            import std.string : strip;
+            /*
+            * if whitespace squashing is enabled, we have to iterate over optOutItems
+            * because squashing dont applies to all output-items of optOutItems
+            */
+            string[] columns;
+            foreach(string outputItem ; optOutItems) {
+                if(outputItem.among("element-strip" , "element-inner" , "element")) {
+                    columns ~= dom.nodeOutputItem(node , outputItem).replaceAll(ctRegex!(`[\s]{2,}`), " ").strip() ;
+                }
+                else {
+                    columns ~= dom.nodeOutputItem(node , outputItem) ;
+                }
+            }
+            write(join(columns,optNodeSeparator)~optNodeTerminator);
+        }
+        else {
+            write(join(dom.nodeOutputItems(node,optOutItems),optNodeSeparator)~optNodeTerminator);
+        }
     }
     return 0;
 }
