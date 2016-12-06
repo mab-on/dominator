@@ -7,6 +7,6 @@
 	"copyright": "Copyright © 2016, Martin Brzenska",
 	"license": "MIT",
 	"dependencies": {
-		"libdominator": "==1.1.1"
+		"libdominator": "==1.1.2"
 	}
 }
