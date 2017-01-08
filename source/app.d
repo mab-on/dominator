@@ -23,12 +23,13 @@ int main(string[] args)
         optAttribs;
 
     string[]
-        optTags,
+        optFilterExpression,
         optOutItems;
 
     bool
         withComments,
-        squashWhitespaces;
+        squashWhitespaces,
+        indent;
 
     GetoptResult optResult;
     try {
@@ -45,7 +46,7 @@ int main(string[] args)
             ~"\t" ~ "input{checked:}" ~ "\t\t" ~ "All input nodes with the attribute 'checked'." ~ "\n"
             ~"\t" ~ "a{href:(regex)^http://}" ~ "\t" ~ "a-nodes with a href attribute that matches the regular expression '^http://'." ~ "\n"
             ~"\t" ~ "i{class:(regex)link}" ~ "\t" ~ "i nodes with 'link' as or inside the attribute 'class'." ~ "\n"
-            , &optTags,
+            , &optFilterExpression,
 
             "output-item|o",
             "\nDefines the output. Valid arguments are:\n"
@@ -79,8 +80,11 @@ int main(string[] args)
             "squash-whitespaces|w",
             "\nRemoves multiple whitespaces." ~ "\n"
             ~"Only applies to the output-items 'element-strip' , 'element-inner' , 'element'" ~ "\n",
-            &squashWhitespaces
+            &squashWhitespaces,
 
+            "indent",
+            "\nTry to arrange the nodes in the document better for human readable.\n",
+            &indent
         );
     }
     catch(GetOptException e) {
@@ -138,18 +142,23 @@ int main(string[] args)
     }
 
     if(args.length == 2) {
-        optTags ~= args[1];
+        optFilterExpression ~= args[1];
     }
 
-    auto domFilterHandler = DomFilter(optTags);
+    if(optFilterExpression.length == 0) {
+        optFilterExpression ~= "*[1]";
+    }
+
+    auto domFilterHandler = DomFilter(optFilterExpression);
     auto dom = new Dominator(input);
 
-    //Filter and Write out
-    Node[] nodes = dom.getNodes().filterDom(domFilterHandler);
-    if( ! withComments) {
-        nodes = nodes.filterComments();
+    if(indent) {
+//        dom.prettify();
     }
-    foreach(Node node ; nodes) {
+
+    //Filter and Write out
+    foreach(Node node ; dom.getNodes().filterDom(domFilterHandler)) {
+        if( !withComments && node.isComment) { continue; }
         if(squashWhitespaces) {
             import std.algorithm.comparison : among;
             import std.regex : replaceAll , ctRegex;
@@ -161,13 +170,13 @@ int main(string[] args)
             string[] columns;
             foreach(string outputItem ; optOutItems) {
                 if(outputItem.among("element-strip" , "element-inner" , "element")) {
-                    columns ~= dom.nodeOutputItem(node , outputItem).replaceAll(ctRegex!(`[\s]{2,}`), " ").strip() ;
+                    write( dom.nodeOutputItem(node , outputItem).replaceAll(ctRegex!(`[\s]{2,}`), " ").strip() ~ optNodeSeparator) ;
                 }
                 else {
-                    columns ~= dom.nodeOutputItem(node , outputItem) ;
+                    write ( dom.nodeOutputItem(node , outputItem) ~ optNodeSeparator ) ;
                 }
             }
-            write(join(columns,optNodeSeparator)~optNodeTerminator);
+            write(optNodeTerminator);
         }
         else {
             write(join(dom.nodeOutputItems(node,optOutItems),optNodeSeparator)~optNodeTerminator);
