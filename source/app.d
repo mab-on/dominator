@@ -13,6 +13,7 @@ import std.algorithm;
 import std.array : join;
 
 import libdominator;
+import dominator.output;
 
 int main(string[] args)
 {
