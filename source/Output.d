@@ -45,7 +45,7 @@ string nodeOutputItem(ref Dominator dom, Node node, string optOutItem)
       case "tag":
         return node.getTag();
       case "element":
-        return dom.getElelment(node);
+        return dom.getElement(node);
       case "element-opener":
         return dom.getStartElement(node);
       case "element-start-length":
